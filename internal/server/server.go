@@ -25,7 +25,7 @@ func New(config *Config) *Server {
 
 // Run connector server
 func (s *Server) Run() error {
-	if err := s.ConfigureLogger(); err != nil {
+	if err := s.configureLogger(); err != nil {
 		return err
 	}
 
@@ -34,8 +34,7 @@ func (s *Server) Run() error {
 	return http.ListenAndServe(s.config.BindAddr, s.router)
 }
 
-// ConfigureLogger - configure logger for REST API connector server
-func (s *Server) ConfigureLogger() error {
+func (s *Server) configureLogger() error {
 	level, err := logrus.ParseLevel(s.config.LogLevel)
 	if err != nil {
 		return err
@@ -45,7 +44,11 @@ func (s *Server) ConfigureLogger() error {
 	return nil
 }
 
-// InitRoutes for REST API connector server
-func (s *Server) InitRoutes() {
+func (s *Server) initRoutes() {
 	// MySQL routes group
+}
+
+//
+func (s *Server) configureMysqlStore() error {
+	return nil
 }

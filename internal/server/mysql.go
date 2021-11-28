@@ -2,5 +2,8 @@ package server
 
 // MySQL struct...
 type MySQL struct {
-	Address string
+	Port     string `json:"port"`
+	Host     string `json:"host"`
+	Password string `json:"password"`
+	User     string `json:"user"`
 }
