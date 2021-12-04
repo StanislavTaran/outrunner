@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	serverConfigPath string = "config/server.json"
+	serverConfigPath = "config/server.json"
 )
 
 func init() {
