@@ -1,14 +1,16 @@
 package server
 
 import (
+	"connector/internal/mysql"
 	"encoding/json"
 	"io/ioutil"
 )
 
 // Config - config for 'connector' server
 type Config struct {
-	BindAddr string `json:"port"`
-	LogLevel string `toml:"logLevel"`
+	BindAddr string                  `json:"port"`
+	LogLevel string                  `toml:"logLevel"`
+	MySQL    map[string]mysql.Config `json:"mysql"`
 }
 
 // NewConfig - initialize new config with default values for connector server.

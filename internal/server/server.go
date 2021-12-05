@@ -1,6 +1,9 @@
 package server
 
 import (
+	"connector/internal/mysql"
+	"errors"
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -11,7 +14,7 @@ type Server struct {
 	config *Config
 	logger *logrus.Logger
 	router *mux.Router
-	mySQL  *MySQL
+	mySQL  *map[string]*mysql.MySQL
 }
 
 // New - initialize new connector server
@@ -20,6 +23,7 @@ func New(config *Config) *Server {
 		config: config,
 		logger: logrus.New(),
 		router: mux.NewRouter(),
+		mySQL:  new(map[string]*mysql.MySQL),
 	}
 }
 
@@ -28,6 +32,12 @@ func (s *Server) Run() error {
 	if err := s.configureLogger(); err != nil {
 		return err
 	}
+
+	if err := s.configureMysqlStore(); err != nil {
+		return err
+	}
+
+	s.initRoutes()
 
 	s.logger.Info("Starting API server on port", s.config.BindAddr)
 
@@ -45,10 +55,23 @@ func (s *Server) configureLogger() error {
 }
 
 func (s *Server) initRoutes() {
-	// MySQL routes group
+	s.router.HandleFunc("/api/v1/mysql/{dbName}/get", s.mySQLGetRecords())
 }
 
-//
+// configureMysqlStore - setup all your MySQL connections.
+// This method uses connection info passed into server config (server.json)
 func (s *Server) configureMysqlStore() error {
+	for k, v := range s.config.MySQL {
+		if (*s.mySQL) == nil {
+			*s.mySQL = map[string]*mysql.MySQL{}
+		}
+		(*s.mySQL)[k] = mysql.New(&v)
+
+		if err := (*s.mySQL)[k].Open(); err != nil {
+			e := fmt.Errorf("MySql : %s, \n%w", k, err)
+			return errors.New(e.Error())
+		}
+	}
+
 	return nil
 }
