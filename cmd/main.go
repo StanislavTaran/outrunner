@@ -1,8 +1,8 @@
 package main
 
 import (
-	"connector/internal/server"
 	"flag"
+	"github.com/StanislavTaran/outrunner/internal/server"
 	"log"
 )
 

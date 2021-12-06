@@ -1,4 +1,4 @@
-module connector
+module github.com/StanislavTaran/outrunner
 
 go 1.17
 
