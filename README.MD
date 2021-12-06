@@ -1,1 +1,1 @@
-####OutRunner - project for Automation testing purposes
+#### OutRunner - project for Automation testing purposes
