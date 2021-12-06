@@ -1,9 +1,9 @@
 package server
 
 import (
-	"connector/internal/mysql"
 	"errors"
 	"fmt"
+	"github.com/StanislavTaran/outrunner/internal/mysql"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -56,6 +56,7 @@ func (s *Server) configureLogger() error {
 
 func (s *Server) initRoutes() {
 	s.router.HandleFunc("/api/v1/mysql/{dbName}/get", s.mySQLGetRecords())
+	s.router.HandleFunc("/api/v1/mysql/{dbName}/create", s.mySQLCreateRecord())
 }
 
 // configureMysqlStore - setup all your MySQL connections.

@@ -1,8 +1,8 @@
 package server
 
 import (
-	"connector/internal/mysql"
 	"encoding/json"
+	"github.com/StanislavTaran/outrunner/internal/mysql"
 	"io/ioutil"
 )
 
