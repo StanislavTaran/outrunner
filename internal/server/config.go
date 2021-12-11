@@ -9,7 +9,7 @@ import (
 // Config - config for 'connector' server
 type Config struct {
 	BindAddr string                  `json:"port"`
-	LogLevel string                  `toml:"logLevel"`
+	LogLevel string                  `json:"logLevel"`
 	MySQL    map[string]mysql.Config `json:"mysql"`
 }
 

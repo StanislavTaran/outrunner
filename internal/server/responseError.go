@@ -10,16 +10,15 @@ type responseError struct {
 	Reason  string `json:"reason"`
 }
 
-// NewResponseError creates new responseError struct and returns pointer
+// NewResponseError creates and sends to client custom response about error
 func (s *Server) NewResponseError(w http.ResponseWriter, message, reason string, code int) {
 	err := func(w http.ResponseWriter, message, reason string, code int) error {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(code)
-		body := responseError{
+		res, err := json.Marshal(responseError{
 			Message: message,
 			Reason:  reason,
-		}
-		res, err := json.Marshal(body)
+		})
 		if err != nil {
 			return err
 		}
