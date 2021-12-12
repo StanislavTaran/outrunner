@@ -1,12 +1,12 @@
 {
   "port": ":9090",
-  "logLevel": "info",
+  "logLevel": "trace",
   "mysql": {
     "testDB": {
-      "connectionUrl": "root:test@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=True&loc=Local"
+      "connectionUrl": "root:test@tcp(mysql:3306)/test?charset=utf8mb4&parseTime=True&loc=Local"
     },
     "myDb": {
-      "connectionUrl": "root:test@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=True&loc=Local"
+      "connectionUrl": "root:test@tcp(mysql:3306)/test?charset=utf8mb4&parseTime=True&loc=Local"
     }
   }
 }
