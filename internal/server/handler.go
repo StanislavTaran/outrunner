@@ -12,11 +12,6 @@ import (
 // mySQLGetRecords returns list of records by passed query in request body
 func (s *Server) mySQLGetRecords() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		if request.Method != http.MethodPost {
-			http.Error(writer, "Method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
-
 		vars := mux.Vars(request)
 		if _, ok := s.config.MySQL[vars["dbName"]]; !ok {
 			s.NewResponseError(
@@ -90,11 +85,6 @@ func (s *Server) mySQLGetRecords() http.HandlerFunc {
 // mySQLCreateRecord creates records according to passed query
 func (s *Server) mySQLCreateRecord() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		if request.Method != http.MethodPost {
-			http.Error(writer, "Method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
-
 		vars := mux.Vars(request)
 		if _, ok := s.config.MySQL[vars["dbName"]]; !ok {
 			s.NewResponseError(
@@ -164,11 +154,6 @@ func (s *Server) mySQLCreateRecord() http.HandlerFunc {
 // mongoGetRecords returns list of records by passed query in request body
 func (s *Server) mongoGetRecords() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		if request.Method != http.MethodPost {
-			http.Error(writer, "Method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
-
 		vars := mux.Vars(request)
 		if _, ok := s.config.Mongodb[vars["dbName"]]; !ok {
 			s.NewResponseError(
@@ -242,11 +227,6 @@ func (s *Server) mongoGetRecords() http.HandlerFunc {
 // mongoCreateRecord creates records according to passed query
 func (s *Server) mongoCreateRecord() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		if request.Method != http.MethodPost {
-			http.Error(writer, "Method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
-
 		vars := mux.Vars(request)
 		if _, ok := s.config.Mongodb[vars["dbName"]]; !ok {
 			s.NewResponseError(
