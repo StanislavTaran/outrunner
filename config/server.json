@@ -8,5 +8,11 @@
     "myDb": {
       "connectionUrl": "root:test@tcp(mysql:3306)/test?charset=utf8mb4&parseTime=True&loc=Local"
     }
+  },
+  "mongodb": {
+    "testDB": {
+      "connectionUrl": "mongodb://root:test@localhost:27017/",
+      "database" : "test"
+    }
   }
 }

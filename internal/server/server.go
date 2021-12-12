@@ -3,6 +3,7 @@ package server
 import (
 	"errors"
 	"fmt"
+	"github.com/StanislavTaran/outrunner/internal/mongodb"
 	"github.com/StanislavTaran/outrunner/internal/mysql"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
@@ -12,19 +13,21 @@ import (
 
 // Server - connector server struct
 type Server struct {
-	config *Config
-	logger *logrus.Logger
-	router *mux.Router
-	mySQL  *map[string]*mysql.MySQL
+	config  *Config
+	logger  *logrus.Logger
+	router  *mux.Router
+	mySQL   *map[string]*mysql.MySQL
+	mongodb *map[string]*mongodb.Mongodb
 }
 
 // New - initialize new connector server
 func New(config *Config) *Server {
 	return &Server{
-		config: config,
-		logger: logrus.New(),
-		router: mux.NewRouter(),
-		mySQL:  new(map[string]*mysql.MySQL),
+		config:  config,
+		logger:  logrus.New(),
+		router:  mux.NewRouter(),
+		mySQL:   new(map[string]*mysql.MySQL),
+		mongodb: new(map[string]*mongodb.Mongodb),
 	}
 }
 
@@ -37,7 +40,9 @@ func (s *Server) Run() error {
 	if err := s.configureMysqlStore(); err != nil {
 		return err
 	}
-
+	if err := s.configureMongoStore(); err != nil {
+		return err
+	}
 	s.initRoutes()
 
 	s.logger.Info("Starting API server on port", s.config.BindAddr)
@@ -63,6 +68,9 @@ func (s *Server) configureLogger() error {
 func (s *Server) initRoutes() {
 	s.router.HandleFunc("/api/v1/mysql/{dbName}/get", s.mySQLGetRecords())
 	s.router.HandleFunc("/api/v1/mysql/{dbName}/create", s.mySQLCreateRecord())
+
+	s.router.HandleFunc("/api/v1/mongo/{dbName}/get", s.mongoGetRecords())
+	s.router.HandleFunc("/api/v1/mongo/{dbName}/create", s.mongoCreateRecord())
 }
 
 // configureMysqlStore - setup all your MySQL connections.
@@ -76,6 +84,24 @@ func (s *Server) configureMysqlStore() error {
 
 		if err := (*s.mySQL)[k].Open(); err != nil {
 			e := fmt.Errorf("MySql : %s, \n%w", k, err)
+			return errors.New(e.Error())
+		}
+	}
+
+	return nil
+}
+
+// configureMongoStore - setup all your mongodb connections.
+// This method uses connection info passed into server config (server.json)
+func (s *Server) configureMongoStore() error {
+	for k, v := range s.config.Mongodb {
+		if (*s.mongodb) == nil {
+			*s.mongodb = map[string]*mongodb.Mongodb{}
+		}
+		(*s.mongodb)[k] = mongodb.New(&v)
+
+		if err := (*s.mongodb)[k].Open(); err != nil {
+			e := fmt.Errorf("MongoDB : %s, \n%w", k, err)
 			return errors.New(e.Error())
 		}
 	}

@@ -1,14 +1,12 @@
 version: "3"
 services:
-  outrunner:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "9090:9090"
-#    volumes:
-#      - ./config/server.json:/config/server.json
-    restart: always
+#  outrunner:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "9090:9090"
+#    restart: always
   mysql:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
@@ -17,3 +15,11 @@ services:
       MYSQL_ROOT_PASSWORD: test
     ports:
       - "3306:3306"
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: test
+    ports:
+      - "27017:27017"

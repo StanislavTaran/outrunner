@@ -40,21 +40,8 @@ func rowsToJSON(rows *sql.Rows) ([]map[string]interface{}, error) {
 					fmt.Printf("Failed on if for type %T of %v\n", x, x)
 				}
 			}
-			result = appendEntity(result, []map[string]interface{}{masterData})
+			result = append(result, masterData)
 		}()
 	}
 	return result, nil
-}
-func appendEntity(slice []map[string]interface{}, data []map[string]interface{}) []map[string]interface{} {
-	m := len(slice)
-	n := m + len(data)
-	if n > cap(slice) { // if necessary, reallocate
-		// allocate double what's needed, for future growth.
-		newSlice := make([]map[string]interface{}, (n+1)*2)
-		copy(newSlice, slice)
-		slice = newSlice
-	}
-	slice = slice[0:n]
-	copy(slice[m:n], data)
-	return slice
 }

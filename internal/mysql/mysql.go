@@ -16,7 +16,7 @@ type QueryInfo struct {
 	Query string `json:"query"`
 }
 
-// New - initialize new MySQL config
+// New - initialize new MySQL struct with config
 func New(config *Config) *MySQL {
 	return &MySQL{
 		config: config,

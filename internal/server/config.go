@@ -2,15 +2,17 @@ package server
 
 import (
 	"encoding/json"
+	"github.com/StanislavTaran/outrunner/internal/mongodb"
 	"github.com/StanislavTaran/outrunner/internal/mysql"
 	"io/ioutil"
 )
 
 // Config - config for 'connector' server
 type Config struct {
-	BindAddr string                  `json:"port"`
-	LogLevel string                  `json:"logLevel"`
-	MySQL    map[string]mysql.Config `json:"mysql"`
+	BindAddr string                    `json:"port"`
+	LogLevel string                    `json:"logLevel"`
+	MySQL    map[string]mysql.Config   `json:"mysql"`
+	Mongodb  map[string]mongodb.Config `json:"mongodb"`
 }
 
 // NewConfig - initialize new config with default values for connector server.
