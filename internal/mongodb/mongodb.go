@@ -14,11 +14,13 @@ type Mongodb struct {
 	db     *mongo.Client
 }
 
+// QueryGet describes to perform retrieving mongo records
 type QueryGet struct {
 	Collection string                 `json:"collection"`
 	Query      map[string]interface{} `json:"query"`
 }
 
+// QueryInsert describes interface to insert mongo records
 type QueryInsert struct {
 	Collection string                   `json:"collection"`
 	Query      []map[string]interface{} `json:"query"`
@@ -98,6 +100,7 @@ func (m *Mongodb) GetRecords(q QueryGet) ([]map[string]interface{}, error) {
 	return result, nil
 }
 
+// CreateRecords creates new records according to passed QueryInsert
 func (m *Mongodb) CreateRecords(q QueryInsert) (ok bool, err error) {
 	collection := m.db.Database(m.config.Database).Collection(q.Collection)
 	docs := make([]interface{}, len(q.Query))

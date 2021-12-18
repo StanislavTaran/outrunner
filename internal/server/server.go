@@ -66,11 +66,11 @@ func (s *Server) configureLogger() error {
 }
 
 func (s *Server) initRoutes() {
-	s.router.HandleFunc("/api/v1/mysql/{dbName}/get", s.mySQLGetRecords())
-	s.router.HandleFunc("/api/v1/mysql/{dbName}/create", s.mySQLCreateRecord())
+	s.router.Handle("/api/v1/mysql/{dbName}/get", s.CheckMethod(s.mySQLGetRecords(), http.MethodPost))
+	s.router.Handle("/api/v1/mysql/{dbName}/create", s.CheckMethod(s.mySQLCreateRecord(), http.MethodPost))
 
-	s.router.HandleFunc("/api/v1/mongo/{dbName}/get", s.mongoGetRecords())
-	s.router.HandleFunc("/api/v1/mongo/{dbName}/create", s.mongoCreateRecord())
+	s.router.Handle("/api/v1/mongo/{dbName}/get", s.CheckMethod(s.mongoGetRecords(), http.MethodPost))
+	s.router.Handle("/api/v1/mongo/{dbName}/create", s.CheckMethod(s.mongoCreateRecord(), http.MethodPost))
 }
 
 // configureMysqlStore - setup all your MySQL connections.
