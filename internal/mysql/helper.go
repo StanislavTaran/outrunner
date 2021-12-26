@@ -2,12 +2,20 @@ package mysql
 
 import (
 	"database/sql"
-	"fmt"
+	"encoding/hex"
 	"strconv"
 )
 
 func rowsToJSON(rows *sql.Rows) ([]map[string]interface{}, error) {
 	columns, err := rows.Columns()
+	if err != nil {
+		return nil, err
+	}
+	colTypes, err := rows.ColumnTypes()
+	if err != nil {
+		return nil, err
+	}
+
 	result := make([]map[string]interface{}, 0)
 
 	if err != nil {
@@ -29,15 +37,23 @@ func rowsToJSON(rows *sql.Rows) ([]map[string]interface{}, error) {
 		func() {
 			masterData := make(map[string]interface{})
 			for i, v := range values {
-				x := v.([]byte)
-				if nx, ok := strconv.ParseFloat(string(x), 64); ok == nil {
-					masterData[columns[i]] = nx
-				} else if b, ok := strconv.ParseBool(string(x)); ok == nil {
-					masterData[columns[i]] = b
-				} else if "string" == fmt.Sprintf("%T", string(x)) {
+
+				// TODO need improvements
+				switch colTypes[i].DatabaseTypeName() {
+				case "CHAR", "VARCHAR", "TEXT", "ENUM", "SET":
+					x := v.([]byte)
 					masterData[columns[i]] = string(x)
-				} else {
-					fmt.Printf("Failed on if for type %T of %v\n", x, x)
+				case "INTEGER", "INT", "TINYINT", "SMALLINT", "FLOAT", "DOUBLE", "DECIMAL", "NUMERIC":
+					x := v.([]byte)
+					masterData[columns[i]], _ = strconv.ParseFloat(string(x), 64)
+				case "DATE", "TIME", "DATETIME", "TIMESTAMP", "YEAR":
+					masterData[columns[i]] = v
+				case "BINARY", "VARBINARY", "BLOB":
+					x := v.([]byte)
+					res := hex.EncodeToString(x)
+					masterData[columns[i]] = res
+				default:
+					masterData[columns[i]] = v
 				}
 			}
 			result = append(result, masterData)
